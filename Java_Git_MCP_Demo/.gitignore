@@ -1,0 +1,17 @@
+.DS_Store
+*.class
+*.jar
+*.log
+target/
+.idea/
+.vscode/
+*.iml
+node_modules/
+.env
+.DS_Store
+*.swp
+*.swo
+*~
+.classpath
+.project
+.settings/
