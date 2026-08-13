@@ -33,21 +33,35 @@ java Main
 
 ```bash
 docker build -t loginapp .
-docker run loginapp
+docker run -p 5900:5900 loginapp
 ```
 
 ### Note: this is a GUI app
 
-Since this app opens Swing windows, the container needs access to a display
-to actually show them on screen.
+Since this app opens Swing windows, the container needs a display to actually
+show them on screen. The image bundles `Xvfb` (a virtual display) and
+`x11vnc` (serves that display over VNC), so no display is required on the
+host — the container provides its own.
 
-**Linux (X11):**
+Once the container is running, connect a VNC client (e.g. TigerVNC, RealVNC)
+to:
+
+```
+<host-ip>:5900
+```
+
+This works the same way whether you're running Docker locally or on a
+headless remote server (e.g. an EC2 instance) — you'll see and can click
+through the Login, Details, and Output screens over VNC.
+
+**Alternative — forwarding your own X server instead of VNC:**
+
+If you're on Linux and prefer to forward your local display instead:
 
 ```bash
 docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix loginapp
 ```
 
-**Windows/Mac:** requires an X server (e.g. VcXsrv on Windows, XQuartz on Mac)
-running and reachable, with `DISPLAY` set accordingly.
-
-Without a display connection, the container will fail to open the GUI windows.
+This requires an X server reachable from the container (built-in on Linux;
+on Windows/Mac you'd need VcXsrv/XQuartz), so VNC is the simpler default,
+especially for remote/headless servers.
